@@ -1,0 +1,1 @@
+Contains row and column bands in the range 0 percent to 10 percent.

@@ -1,0 +1,1 @@
+Elliminated the top 4/9 th of frequency bands.
