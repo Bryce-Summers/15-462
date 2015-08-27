@@ -20,29 +20,32 @@ title('Image A')
 
 %Perform 2D FFTs
 fftA = fft2(double(imageA));
-%fftB = fft2(double(imageB));
-
 
 % -- Band Limit the FFT.
 [rows, columns] = size(fftA);
- 
-lower = .9;
+
+%for i=0:9
+
+fftB = fftshift(fftA);
+
+%lower = .1*i;
+%upper = lower + .1;
+
 upper = 1.0;
-
-bound_lower_c = columns*lower;
-bound_lower_r = rows*lower;
-
-bound_higher_c = columns*upper;
-bound_higher_r = rows*upper;
- 
 
 for r=1:rows
   for c=1:columns
-      %if ~((r < bound_higher_r && c < bound_higher_c) && (r > bound_lower_r || c > bound_lower_c))
-         
-       if r > rows*99/100 || c > columns*99/100   
+
+      dx = r - rows/2;
+      dy = c - columns/2;
+      
+      dist = sqrt(dx*dx + dy*dy);
+               
+      %if ~(lower*rows/2 <= dist && dist <= upper*rows/2)
+      if (dist <= rows/5)
+      %if dist > rows/5
           
-          fftA(r,c) = 0;%(fftA(r,c) .* .05);
+          fftB(r,c) = 0;
             
       end
   end
@@ -50,44 +53,38 @@ end
 
 
 %Display magnitude and phase of proccessed 2D FFT.
-figure, imshow(abs(fftshift(fftA)),[24 100000]), colormap gray
+figure, imshow(abs(fftB),[24 100000]), colormap gray
 title('Image A FFT2 Magnitude')
-figure, imshow(angle(fftshift(fftA)),[-pi pi]), colormap gray
+figure, imshow(angle(fftB),[-pi pi]), colormap gray
 title('Image A FFT2 Phase')
 
+fftB = ifftshift(fftB);
 
 
 %Switch magnitude and phase of 2D FFTs.
 
-fftC = abs(fftA).*exp(i*angle(fftA));
-%fftD = abs(fftB).*exp(i*angle(fftA));
+% Magnitude and phase based processing.
+%fftC = abs(fftA).*exp(i*angle(fftA));
 
-
-%Perform inverse 2D FFTs on switched images.
-imageC = ifft2(fftC);
-%imageD = ifft2(fftD);
+image_out = ifft2(fftB);
 
 %Calculate limits for plotting.
-cmin = min(min(abs(imageC)));
-cmax = max(max(abs(imageC)));
+cmin = min(min(abs(image_out)));
+cmax = max(max(abs(image_out)));
 
 %dmin = min(min(abs(imageD)));
 %dmax = max(max(abs(imageD)));
 
-%Display switched images.
-figure, imshow(abs(imageC), [cmin cmax]), colormap gray
-title('Image C  Magnitude')
-%figure, imshow(abs(imageD), [dmin dmax]), colormap gray
-%title('Image D  Magnitude')
+%Display the proccessed image in an onscreen window.
+figure, imshow(abs(image_out), [cmin cmax]), colormap gray
+title('Image Out')
 
+
+i = 0;
 %Save images.
-%saveas(1,'imageA.jpg')
-saveas(2,'magnitude.png')
-saveas(3,'phase.png')
-saveas(4,'final.png')
-%saveas(5,'imageBfftmag.png')
-%saveas(6,'imageBfftpha.png')
-%saveas(7,'imageC.png')
-%saveas(8,'imageD.png')
+saveas(2 + 3*i,strcat('mag', int2str(i), int2str(i+1), '.png'))
+saveas(3 + 3*i,strcat('phase', int2str(i), int2str(i+1), '.png'))
+saveas(4 + 3*i,strcat('output', int2str(i), int2str(i+1), '.png'))
 
+%end
 
