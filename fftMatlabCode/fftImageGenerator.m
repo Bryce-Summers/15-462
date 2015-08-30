@@ -5,7 +5,7 @@ close all; clear all;
 %http://matlabgeeks.com/tips-tutorials/how-to-do-a-2-d-fourier-transform-in-matlab/
 
 % Import Images.
-imageA = imread('MetroCenterEscalators','jpg');
+imageA = imread('kayvonf3','jpg');
 %imageB = imread('MetroCenterEscalators','jpg');
 
 %Limits the channels so that the matrix is only 2D.
@@ -41,13 +41,15 @@ for r=1:rows
       
       dist = sqrt(dx*dx + dy*dy);
                
-      %if ~(lower*rows/2 <= dist && dist <= upper*rows/2)
-      if (dist <= rows/5)
-      %if dist > rows/5
-          
-          fftB(r,c) = 0;
-            
-      end
+      
+      
+      %if dist > rows/20%lowpass
+      %if ~(rows/20 <= dist && dist < rows/10)%midpass
+      %if (dist <= rows/10)%high pass
+          %fftB(r,c) = 0;
+       
+      %end
+      
   end
 end
 
