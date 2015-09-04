@@ -40,15 +40,14 @@ for r=1:rows
       dy = c - columns/2;
       
       dist = sqrt(dx*dx + dy*dy);
-               
-      
-      
-      %if dist > rows/20%lowpass
+     
+      %if dist > rows/60 %lowpass
+      %if ~(rows/60 <= dist && dist < rows/20)
       %if ~(rows/20 <= dist && dist < rows/10)%midpass
-      %if (dist <= rows/10)%high pass
-          %fftB(r,c) = 0;
+      if (dist <= rows/10)%high pass
+          fftB(r,c) = 0;
        
-      %end
+      end
       
   end
 end
@@ -56,9 +55,10 @@ end
 
 %Display magnitude and phase of proccessed 2D FFT.
 figure, imshow(abs(fftB),[24 100000]), colormap gray
-title('Image A FFT2 Magnitude')
+set(gca,'position',[0 0 1 1],'units','normalized')
+%title('Image A FFT2 Magnitude')
 figure, imshow(angle(fftB),[-pi pi]), colormap gray
-title('Image A FFT2 Phase')
+%title('Image A FFT2 Phase')
 
 fftB = ifftshift(fftB);
 
@@ -79,14 +79,14 @@ cmax = max(max(abs(image_out)));
 
 %Display the proccessed image in an onscreen window.
 figure, imshow(abs(image_out), [cmin cmax]), colormap gray
-title('Image Out')
+%title('Image Out')
 
 
 i = 0;
 %Save images.
-saveas(2 + 3*i,strcat('mag', int2str(i), int2str(i+1), '.png'))
-saveas(3 + 3*i,strcat('phase', int2str(i), int2str(i+1), '.png'))
-saveas(4 + 3*i,strcat('output', int2str(i), int2str(i+1), '.png'))
+saveTightFigure(2 + 3*i,strcat('mag', int2str(i), int2str(i+1), '.png'))
+saveTightFigure(3 + 3*i,strcat('phase', int2str(i), int2str(i+1), '.png'))
+saveTightFigure(4 + 3*i,strcat('output', int2str(i), int2str(i+1), '.png'))
 
 %end
 
